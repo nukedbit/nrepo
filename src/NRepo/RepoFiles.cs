@@ -18,6 +18,7 @@ namespace NRepo
 
         public static async Task<List<string>> DownloadAsync()
         {
+            Console.WriteLine();
             var client = new WebClient();
             foreach (var (name , url) in files)
             {
@@ -30,6 +31,7 @@ namespace NRepo
                 Console.WriteLine("Downloading {0} ...", name);
                 await client.DownloadFileTaskAsync(new Uri(url), filePath);
             }
+            Console.WriteLine();
             return files.Select(f => f.filename).ToList();
         }
     }

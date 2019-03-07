@@ -16,35 +16,25 @@ namespace NRepo
             _repositoryHandler = repositoryHandler;
         }
 
-        [Option(Description = "Create a new Repository with specified Name", ShortName = "n")]
-        public string NewRepoName { get; set; }
-
-        [Option("-i|--init", Description =
-            "Initialize a repository in current folder, if already exists just add the ignore files and license")]
-        public (bool init, string folder) Init { get; set; }
+        [Option(Description = "Create a new Repository at the specified path, could be a new folder or an existing one.", ShortName = "n")]
+        public (bool create, string path) RepoPath { get; set; }
 
         private async Task OnExecuteAsync()
         {
-            if (!string.IsNullOrEmpty(NewRepoName))
+            var (create, path ) = RepoPath;
+            if (create)
             {
-                await _repositoryHandler.ExecuteAsync(false,NewRepoName);
-            }
-            else if (Init.init)
-            {
-                var folder = Init.folder;
-
-                if (string.IsNullOrEmpty(folder))
+                if (string.IsNullOrEmpty(path))
                 {
-                    folder = Environment.CurrentDirectory;
+                    Console.WriteLine("Repository will be created on the current directory.");
+                    if (!ConsoleUtils.AskForConfirmation())
+                    {
+                        Console.WriteLine("Exit");
+                        return;
+                    }
                 }
-                else
-                {
-                    Environment.CurrentDirectory = Path.GetFullPath(folder);
-                }
-
-                var repoName = Path.GetDirectoryName(folder);
-
-                await _repositoryHandler.ExecuteAsync(true, repoName);
+                path = string.IsNullOrEmpty(path) ? Environment.CurrentDirectory : path;                
+                await _repositoryHandler.ExecuteAsync(false, path);
             }
             else
             {

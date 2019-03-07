@@ -26,31 +26,17 @@ namespace NRepo
                 Console.WriteLine("{0}: {1}", i, infos[i].Name);
             }
 
-            var licenseIndex = -1;
-            while (true)
+            var licenseIndex = ConsoleUtils.ReadInputNumber(min: 1, max: infos.Count);
+            if (licenseIndex is int index)
             {
-                var line = Console.ReadLine();
-                if (int.TryParse(line, out var index))
-                {
-                    licenseIndex = index;
-                    break;
-                }
-
-                if (line.Trim() == "exit")
-                {
-                    break;
-                }
-            }
-            if (licenseIndex == -1)
-            {
-                return null;
+                var licenseBody = await _gitHubLicenseApi.DownloadLicenseContentAsync(infos[index - 1]);
+                var licenseFile = "LICENSE";
+                var licenseFilePath = Path.Combine(Environment.CurrentDirectory, licenseFile);
+                File.WriteAllText(licenseFilePath, licenseBody);
+                return licenseFile;
             }
 
-            var licenseBody = await _gitHubLicenseApi.DownloadLicenseContentAsync(infos[licenseIndex]);
-            var licenseFile =  "LICENSE";
-            var licenseFilePath = Path.Combine(Environment.CurrentDirectory, licenseFile);
-            File.WriteAllText(licenseFilePath, licenseBody);
-            return licenseFile;
+            return null;
         }
     }
 }

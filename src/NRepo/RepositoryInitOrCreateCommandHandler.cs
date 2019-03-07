@@ -54,20 +54,28 @@ namespace NRepo
             {
                 AddFilesToGitRepository(filesToAdd, repository);
                 var repoName = new DirectoryInfo(Environment.CurrentDirectory).Name;
-                var newRemoteUrl = await _remoteGithubCommandHandler.HandleAsync(new NewGitHubRepoCommand(repoName));
+                var githubRepository = await _remoteGithubCommandHandler.HandleAsync(new NewGitHubRepoCommand(repoName));
 
-                if (repository.Network.Remotes.Any(r => r.Name =="origin"))
-                {
-                    repository.Network.Remotes.Update("origin", r => r.Url = newRemoteUrl);
-                }
-                else
-                {
-                    repository.Network.Remotes.Add("origin", newRemoteUrl);
-                }
-                
+                SetOriginRemote(repository, githubRepository);
+
+                Console.WriteLine();
+                Console.WriteLine("Remote Url: {0}",githubRepository.Url);
             }
+           
             Console.WriteLine();
             Console.WriteLine("Done.");
+        }
+
+        private static void SetOriginRemote(Repository repository, Octokit.Repository githubRepository)
+        {
+            if (repository.Network.Remotes.Any(r => r.Name == "origin"))
+            {
+                repository.Network.Remotes.Update("origin", r => r.Url = githubRepository.CloneUrl);
+            }
+            else
+            {
+                repository.Network.Remotes.Add("origin", githubRepository.CloneUrl);
+            }
         }
 
         private static void AddFilesToGitRepository(List<string> filesToAdd, Repository repository)
