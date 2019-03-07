@@ -6,17 +6,17 @@ namespace NRepo
 {
     public class LicensePicker
     {
-        private readonly LicenseApi _licenseApi;
+        private readonly IGitHubLicenseApi _gitHubLicenseApi;
 
-        public LicensePicker(LicenseApi licenseApi)
+        public LicensePicker(IGitHubLicenseApi gitHubLicenseApi)
         {
-            _licenseApi = licenseApi;
+            _gitHubLicenseApi = gitHubLicenseApi;
         }
 
         public async Task<string> PickLicenseAsync()
         {
             Console.WriteLine("Downloading licenses list ...");
-            var infos = await _licenseApi.ListAsync();
+            var infos = await _gitHubLicenseApi.ListAsync();
             Console.Clear();
             Console.WriteLine("Choose a License:");
             Console.WriteLine("Enter exit to cancel");
@@ -46,7 +46,7 @@ namespace NRepo
                 return null;
             }
 
-            var licenseBody = await _licenseApi.DownloadLicenseContentAsync(infos[licenseIndex]);
+            var licenseBody = await _gitHubLicenseApi.DownloadLicenseContentAsync(infos[licenseIndex]);
             var licenseFile =  "LICENSE";
             var licenseFilePath = Path.Combine(Environment.CurrentDirectory, licenseFile);
             File.WriteAllText(licenseFilePath, licenseBody);

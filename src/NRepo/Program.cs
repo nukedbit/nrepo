@@ -20,10 +20,9 @@ namespace NRepo
                 .ConfigureServices((context, services) => {
                     services
                         .AddSingleton<RemoteGithubCommandHandler>()
-                        .AddSingleton<NewRepoCommandHandler>()
                         .AddSingleton<LicensePicker>()
                         .AddSingleton<RepositoryInitOrCreateCommandHandler>()
-                        .AddSingleton<LicenseApi>()
+                        .AddSingleton<IGitHubLicenseApi, GitHubLicenseApi>()
                         .AddSingleton((_) =>
                         {
                             var client = new GitHubClient(new ProductHeaderValue("github-tools"))

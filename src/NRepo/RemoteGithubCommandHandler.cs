@@ -41,7 +41,14 @@ namespace NRepo
                 var repoList = await _client.Repository.GetAllForCurrent(new RepositoryRequest());
                 if (!string.IsNullOrEmpty(search))
                 {
-                    repoList = repoList.Where(r => r.Name.Contains(search.Trim())).ToList();
+                    repoList = repoList.Where(r => r.Name.Contains(search.Trim())).Select(repository =>
+                        {
+                            var sort = repository.Name.StartsWith(search.Trim()) ? 1 : 0;
+                            return ( sort, repository);
+                        })
+                        .OrderByDescending(tuple => tuple.sort)
+                        .Select(tuple => tuple.repository)
+                        .ToList();
                 }
 
                 Console.WriteLine("Pick a remote:");
@@ -62,7 +69,10 @@ namespace NRepo
                     {
                         result = repoList[choice.Value];
                     }
-                    Console.WriteLine("Try again...");
+                    else
+                    {
+                        Console.WriteLine("Try again...");
+                    }
                 }
             }
             

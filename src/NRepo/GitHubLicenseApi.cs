@@ -4,11 +4,11 @@ using Octokit;
 
 namespace NRepo
 {
-    public class LicenseApi
+    public class GitHubLicenseApi : IGitHubLicenseApi
     {
         private readonly GitHubClient _client;
 
-        public LicenseApi(GitHubClient client)
+        public GitHubLicenseApi(GitHubClient client)
         {
             _client = client;
         }

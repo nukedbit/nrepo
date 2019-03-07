@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using LibGit2Sharp;
 
@@ -17,28 +18,18 @@ namespace NRepo
             _licensePicker = licensePicker;
         }
 
-        private string FixRepoName(string name)
+        public string CreateReadMe()
         {
-            return name.Replace(" ", "-");
-        }
-
-        public string CreateReadMe(string repoName)
-        {
+            var repoName = new DirectoryInfo(Environment.CurrentDirectory).Name;
             var name = repoName.Replace("-", " ");
             var filename = Path.Combine(Environment.CurrentDirectory, "./README.md");
             File.WriteAllText(filename, "# " + name);
             return "README.md";
         }
 
-        public async Task ExecuteAsync(bool isInit, string repoName)
+        public async Task ExecuteAsync(bool isInit, string repoPath)
         {
-            if (!isInit)
-            {
-                repoName = FixRepoName(repoName);
-            }
-
-            string repoPath = null;
-            repoPath = isInit ? Environment.CurrentDirectory : Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, repoName));
+            repoPath = isInit ? Environment.CurrentDirectory : Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, repoPath));
 
             var repoAlreadyInitialized = Directory.Exists(Path.Combine(repoPath, ".git"));
 
@@ -57,15 +48,23 @@ namespace NRepo
                 filesToAdd.Add(licenseFile);
             }
             
-            filesToAdd.Add(CreateReadMe(repoName));
-            filesToAdd.Add("LICENSE");
+            filesToAdd.Add(CreateReadMe());
 
             using (var repository = new Repository(repoPath, new RepositoryOptions()))
             {
                 AddFilesToGitRepository(filesToAdd, repository);
-
+                var repoName = new DirectoryInfo(Environment.CurrentDirectory).Name;
                 var newRemoteUrl = await _remoteGithubCommandHandler.HandleAsync(new NewGitHubRepoCommand(repoName));
-                repository.Network.Remotes.Update("origin", r => r.Url = newRemoteUrl);
+
+                if (repository.Network.Remotes.Any(r => r.Name =="origin"))
+                {
+                    repository.Network.Remotes.Update("origin", r => r.Url = newRemoteUrl);
+                }
+                else
+                {
+                    repository.Network.Remotes.Add("origin", newRemoteUrl);
+                }
+                
             }
             Console.WriteLine();
             Console.WriteLine("Done.");
