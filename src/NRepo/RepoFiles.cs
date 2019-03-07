@@ -16,12 +16,17 @@ namespace NRepo
             (".gitignore","https://raw.githubusercontent.com/aspnet/AspNetCore/master/.gitignore")
         };
 
-        public static async Task<List<string>> DownloadAsync(string repoPath)
+        public static async Task<List<string>> DownloadAsync()
         {
             var client = new WebClient();
             foreach (var (name , url) in files)
             {
-                var filePath = Path.Combine(repoPath, name);                
+                var filePath = Path.Combine(Environment.CurrentDirectory, name);
+                if (File.Exists(filePath))
+                {
+                    Console.WriteLine("File {0} already exists! skipping...", name);
+                    continue;
+                }
                 Console.WriteLine("Downloading {0} ...", name);
                 await client.DownloadFileTaskAsync(new Uri(url), filePath);
             }

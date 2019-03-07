@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -9,7 +10,6 @@ namespace NRepo
 {
     class Program
     {
-        private static string Token = "";
 
         public static async Task Main(string[] args) =>
             await new HostBuilder()
@@ -19,15 +19,16 @@ namespace NRepo
                 })
                 .ConfigureServices((context, services) => {
                     services
-                        .AddSingleton<NewGitHubRepoCommandHandler>()
+                        .AddSingleton<RemoteGithubCommandHandler>()
                         .AddSingleton<NewRepoCommandHandler>()
                         .AddSingleton<LicensePicker>()
+                        .AddSingleton<RepositoryInitOrCreateCommandHandler>()
                         .AddSingleton<LicenseApi>()
                         .AddSingleton((_) =>
                         {
                             var client = new GitHubClient(new ProductHeaderValue("github-tools"))
                             {
-                                Credentials = new Credentials(Token)
+                                Credentials = new Credentials(Environment.GetEnvironmentVariable("NREPO_GITHUB_TOKEN"))
                             };
                             return client;
                         })

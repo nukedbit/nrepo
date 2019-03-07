@@ -9,6 +9,7 @@
     <PackageOutputPath>./nupkg</PackageOutputPath>
     <AssemblyName>NRepo</AssemblyName>
     <RootNamespace>NRepo</RootNamespace>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>

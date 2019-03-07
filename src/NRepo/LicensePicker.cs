@@ -13,36 +13,44 @@ namespace NRepo
             _licenseApi = licenseApi;
         }
 
-        public async Task PickLicenseAsync(string repoPath)
+        public async Task<string> PickLicenseAsync()
         {
             Console.WriteLine("Downloading licenses list ...");
             var infos = await _licenseApi.ListAsync();
             Console.Clear();
             Console.WriteLine("Choose a License:");
-            Console.WriteLine("Enter -1 to exit");
+            Console.WriteLine("Enter exit to cancel");
             Console.WriteLine();
             for (var i = 0; i < infos.Count; i++)
             {
                 Console.WriteLine("{0}: {1}", i, infos[i].Name);
             }
 
-            var licenseIndex = 0;
-            while (licenseIndex != -1)
+            var licenseIndex = -1;
+            while (true)
             {
-                if (int.TryParse(Console.ReadLine(), out var index))
+                var line = Console.ReadLine();
+                if (int.TryParse(line, out var index))
                 {
                     licenseIndex = index;
+                    break;
+                }
+
+                if (line.Trim() == "exit")
+                {
                     break;
                 }
             }
             if (licenseIndex == -1)
             {
-                return;
+                return null;
             }
 
             var licenseBody = await _licenseApi.DownloadLicenseContentAsync(infos[licenseIndex]);
-            var licenseFile = Path.Combine(repoPath, "LICENSE");
-            File.WriteAllText(licenseFile, licenseBody);
+            var licenseFile =  "LICENSE";
+            var licenseFilePath = Path.Combine(Environment.CurrentDirectory, licenseFile);
+            File.WriteAllText(licenseFilePath, licenseBody);
+            return licenseFile;
         }
     }
 }

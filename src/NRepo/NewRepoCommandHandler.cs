@@ -7,12 +7,12 @@ namespace NRepo
 {
     public class NewRepoCommandHandler
     {
-        private readonly NewGitHubRepoCommandHandler _newGitHubRepoCommandHandler;
+        private readonly RemoteGithubCommandHandler _remoteGithubCommandHandler;
         private readonly LicensePicker _licensePicker;
 
-        public NewRepoCommandHandler(NewGitHubRepoCommandHandler newGitHubRepoCommandHandler, LicensePicker licensePicker)
+        public NewRepoCommandHandler(RemoteGithubCommandHandler remoteGithubCommandHandler, LicensePicker licensePicker)
         {
-            _newGitHubRepoCommandHandler = newGitHubRepoCommandHandler;
+            _remoteGithubCommandHandler = remoteGithubCommandHandler;
             _licensePicker = licensePicker;
         }
 
@@ -35,11 +35,18 @@ namespace NRepo
             repoName = FixRepoName(repoName);
 
             var repoPath = Path.Combine(Environment.CurrentDirectory, repoName);
+
+            if (Directory.Exists(repoPath))
+            {
+                Console.WriteLine("A folder with the same already exists!");
+                return;
+            }
+
             var gitPath = Repository.Init(repoPath);
 
-            await _licensePicker.PickLicenseAsync(repoPath);
+            await _licensePicker.PickLicenseAsync();
 
-            var filesToAdd = await RepoFiles.DownloadAsync(repoPath);
+            var filesToAdd = await RepoFiles.DownloadAsync();
             filesToAdd.Add(CreateReadMe(repoName));
             filesToAdd.Add("LICENSE");
 
@@ -52,7 +59,7 @@ namespace NRepo
                     repository.Index.Write();
                 }
 
-                var url = await _newGitHubRepoCommandHandler.HandleAsync(new NewGitHubRepoCommand(repoName));
+                var url = await _remoteGithubCommandHandler.HandleAsync(new NewGitHubRepoCommand(repoName));
                 repository.Network.Remotes.Update("origin", r => r.Url = url);
             }
         }
