@@ -19,13 +19,19 @@
     <Copyright>Copyright 2018 (c) NukedBit. All rights reserved.</Copyright>
     <PackageTags>nrepo git github global tool</PackageTags>
     <RootNamespace>NRepo</RootNamespace>
-    <Product>nrepo</Product> 
-    <PackageProjectUrl>https://nukedbit.io</PackageProjectUrl>
-    <PackageIconUrl>https://raw.githubusercontent.com/nukedbit/nrepo/master/logo.png</PackageIconUrl>
+    <Product>nrepo</Product>     
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <FileVersion>0.1.0</FileVersion>
-    
+    <PackageDescription>
+      A .net core global tool that initialize or create a github repo for you with good defaults.
+      Check what is currently supported at https://github.com/nukedbit/nrepo
+    </PackageDescription>
+    <RepositoryUrl>https://github.com/nukedbit/nrepo</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageLicenseUrl>https://github.com/nukedbit/nrepo/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/nukedbit/nrepo</PackageProjectUrl>
+    <PackageIconUrl>https://raw.githubusercontent.com/nukedbit/nrepo/master/logo.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>
