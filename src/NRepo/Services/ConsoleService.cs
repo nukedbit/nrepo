@@ -1,17 +1,16 @@
 ﻿using System;
-using JetBrains.Annotations;
 
 namespace NRepo.Services
 {
     public class ConsoleService : IConsoleService
     {
-        public void WriteLine(string format, [NotNull] params object[] args) => Console.WriteLine(format, args);
+        public void WriteLine(string format,  params object[] args) => Console.WriteLine(format, args);
 
         public void WriteLine(string str) => Console.WriteLine(str);
 
         public void WriteLine() => Console.WriteLine();
 
-        public void WriteLineColored(ConsoleColor color, string format, [NotNull] params object[] args)
+        public void WriteLineColored(ConsoleColor color, string format,  params object[] args)
         {
             var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
