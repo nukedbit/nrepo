@@ -70,9 +70,57 @@ namespace NRepo.Tests
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
-
             consoleService.Received(1).AskForConfirmation();
         }
+
+
+        [Fact(DisplayName = "Search an existing repo")]
+        public async Task SearchExisting()
+        {
+            var gitHubClient = Substitute.For<IGitHubClient>();
+            var repositoriesClient = Substitute.For<IRepositoriesClient>();
+            gitHubClient.Repository.Returns(repositoriesClient);
+            repositoriesClient.GetAllForCurrent().Returns(new List<Repository>()
+            {
+                new Repository(0),
+                new Repository(1)
+            });
+
+            var consoleService = Substitute.For<IConsoleService>();
+            consoleService.ReadLine().Returns("");
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(2);
+            consoleService.ReadInputNumber(min: 1, max: 2).Returns(1);
+
+            var handler = new RemoteGithubCommandHandlerAsync(gitHubClient, consoleService);             
+
+            var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
+
+            Assert.Equal(0, repository.Id);
+        }
+
+        [Fact(DisplayName = "Choose it later")]
+        public async Task ChooseItLater()
+        {
+            var gitHubClient = Substitute.For<IGitHubClient>();
+            var repositoriesClient = Substitute.For<IRepositoriesClient>();
+            gitHubClient.Repository.Returns(repositoriesClient);
+            repositoriesClient.GetAllForCurrent().Returns(new List<Repository>()
+            {
+                new Repository(0),
+                new Repository(1)
+            });
+
+            var consoleService = Substitute.For<IConsoleService>();
+            consoleService.ReadLine().Returns("");
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(3);
+
+            var handler = new RemoteGithubCommandHandlerAsync(gitHubClient, consoleService);
+
+            var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
+
+            Assert.Null(repository);
+        }
+
 
         private static User EmptyUser()
         {

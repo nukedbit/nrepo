@@ -6,9 +6,9 @@ namespace NRepo
 {
     public class GitHubLicenseApi : IGitHubLicenseApi
     {
-        private readonly GitHubClient _client;
+        private readonly IGitHubClient _client;
 
-        public GitHubLicenseApi(GitHubClient client)
+        public GitHubLicenseApi(IGitHubClient client)
         {
             _client = client;
         }

@@ -58,7 +58,7 @@ namespace NRepo
                 _consoleService.WriteLine("You can type a search string:");
                 var search = _consoleService.ReadLine();
                 _consoleService.WriteLine("Retrieving repo list...");
-                var repoList = await _client.Repository.GetAllForCurrent(new RepositoryRequest());
+                var repoList = await _client.Repository.GetAllForCurrent();
                 if (!string.IsNullOrEmpty(search))
                 {
                     repoList = repoList.Where(r => r.Name.Contains(search.Trim())).Select(repository =>

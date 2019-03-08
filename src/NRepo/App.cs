@@ -45,7 +45,9 @@ namespace NRepo
                 var repoCommand = new RemoteGithubCommand(_fileService.GetCurrentDirectoryName());
                 var githubRepository = 
                     await _commandHandler.HandleAsync<RemoteGithubCommand, Octokit.Repository>(repoCommand);
-                _commandHandler.Handle(new FinishRepoSetupCommand(filesToAdd, githubRepository.CloneUrl));
+                _commandHandler.Handle(new FinishRepoSetupCommand(filesToAdd, githubRepository?.CloneUrl));
+                Console.WriteLine();
+                Console.WriteLine("Done, Bye.");
             }
             else
             {
