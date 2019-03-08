@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using NRepo.Services;
 
 namespace NRepo
 {
     public  class DownloadTemplateFilesCommandHandlerAsync : ICommandHandlerAsync<DownloadTemplateFilesCommand, IEnumerable<string>>
     {
         private readonly ITemplateFilesService _templateFilesService;
-        private readonly ILicensePicker _licensePicker;
+        private readonly ILicenseService _licenseService;
         private readonly IFileService _fileService;
 
-        public DownloadTemplateFilesCommandHandlerAsync(ITemplateFilesService templateFilesService, ILicensePicker licensePicker, IFileService fileService)
+        public DownloadTemplateFilesCommandHandlerAsync(ITemplateFilesService templateFilesService, ILicenseService licenseService, IFileService fileService)
         {
             _templateFilesService = templateFilesService;
-            _licensePicker = licensePicker;
+            _licenseService = licenseService;
             _fileService = fileService;
         }
 
@@ -31,7 +32,7 @@ namespace NRepo
         {
             var filesToAdd = await _templateFilesService.DownloadAsync();
 
-            if (await _licensePicker.PickLicenseAsync() is var licenseFile)
+            if (await _licenseService.PickLicenseAsync() is var licenseFile)
             {
                 filesToAdd.Add(licenseFile);
             }

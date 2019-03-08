@@ -5,6 +5,7 @@ using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NRepo.Services;
 using Octokit;
 
 namespace NRepo
@@ -56,7 +57,7 @@ namespace NRepo
                 .ConfigureServices((context, services) =>
                 {
                     services
-                        .AddSingleton<ILicensePicker, LicensePicker>()
+                        .AddSingleton<ILicenseService, LicenseService>()
                         .AddSingleton<ICommandHandler<RepositoryInitOrCreateCommand>, RepositoryInitOrCreateCommandHandler>()
                         .AddSingleton<ICommandHandler<FinishRepoSetupCommand>, FinishRepoSetupCommandHandler>()
                         .AddSingleton<IGitHubLicenseApi, GitHubLicenseApi>()

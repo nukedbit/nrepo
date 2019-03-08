@@ -4,6 +4,7 @@ using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
+using NRepo.Services;
 
 namespace NRepo
 {

@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using LibGit2Sharp;
+using NRepo.Services;
 
 namespace NRepo
 {
