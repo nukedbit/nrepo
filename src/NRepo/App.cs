@@ -42,9 +42,9 @@ namespace NRepo
                 _commandHandler.Handle(new RepositoryInitOrCreateCommand(path));
                 var filesToAdd = await _commandHandler.HandleAsync<DownloadTemplateFilesCommand, IEnumerable<string>>(
                     new DownloadTemplateFilesCommand());
-                var repoCommand = new NewGitHubRepoCommand(_fileService.GetCurrentDirectoryName());
+                var repoCommand = new RemoteGithubCommand(_fileService.GetCurrentDirectoryName());
                 var githubRepository = 
-                    await _commandHandler.HandleAsync<NewGitHubRepoCommand, Octokit.Repository>(repoCommand);
+                    await _commandHandler.HandleAsync<RemoteGithubCommand, Octokit.Repository>(repoCommand);
                 _commandHandler.Handle(new FinishRepoSetupCommand(filesToAdd, githubRepository.CloneUrl));
             }
             else

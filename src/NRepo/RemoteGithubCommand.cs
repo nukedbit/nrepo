@@ -1,10 +1,10 @@
 ﻿namespace NRepo
 {
-    public class NewGitHubRepoCommand
+    public class RemoteGithubCommand
     {
         public string RepoName { get; }
 
-        public NewGitHubRepoCommand(string repoName)
+        public RemoteGithubCommand(string repoName)
         {
             RepoName = repoName;
         }

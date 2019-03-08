@@ -1,24 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using NRepo.Services;
 using Octokit;
 
 namespace NRepo
 {
-    public class RemoteGithubCommandHandlerAsync : ICommandHandlerAsync<NewGitHubRepoCommand, Repository>
+    public class RemoteGithubCommandHandlerAsync : ICommandHandlerAsync<RemoteGithubCommand, Repository>
     {
-        private readonly GitHubClient _client;
+        private readonly IGitHubClient _client;
         private readonly IConsoleService _consoleService;
 
-        public RemoteGithubCommandHandlerAsync(GitHubClient client, IConsoleService consoleService)
+        public RemoteGithubCommandHandlerAsync(IGitHubClient client, IConsoleService consoleService)
         {
             _client = client;
             _consoleService = consoleService;
         }
 
-        public async Task<Repository> HandleAsync(NewGitHubRepoCommand cmd)
+        public async Task<Repository> HandleAsync(RemoteGithubCommand cmd)
         {
             Repository result = null;
 

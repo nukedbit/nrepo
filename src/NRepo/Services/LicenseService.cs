@@ -22,17 +22,17 @@ namespace NRepo.Services
         {
             _consoleService.WriteLine("Downloading licenses list ...");
             var infos = await _gitHubLicenseApi.ListAsync();
-            infos = infos.OrderBy(l => l.Name).ToList();            
+            infos = infos.OrderBy(l => l.Name).ToList();
             _consoleService.WriteLine("Choose a License:");
             _consoleService.WriteLine("Enter exit to cancel");
             _consoleService.WriteLine();
             for (var i = 0; i < infos.Count; i++)
             {
-                Console.WriteLine("{0}: {1}", i, infos[i].Name);
+                _consoleService.WriteLine("{0}: {1}", i + 1, infos[i].Name);
             }
 
-            var licenseIndex = _consoleService.ReadInputNumber(min: 1, max: infos.Count);
-            if (licenseIndex is int index)
+            var inputNumber = _consoleService.ReadInputNumber(min: 1, max: infos.Count);
+            if (inputNumber is int index && index >= 1 && index <= infos.Count)
             {
                 var licenseBody = await _gitHubLicenseApi.DownloadLicenseContentAsync(infos[index - 1]);
                 var licenseFile = "LICENSE";

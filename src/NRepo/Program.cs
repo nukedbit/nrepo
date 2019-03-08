@@ -29,7 +29,7 @@ namespace NRepo
                         .AddSingleton<IFileService, FileService>()
                         .AddSingleton<IConsoleService, ConsoleService>()
                         .AddSingleton<ITemplateFilesService, TemplateFilesService>()
-                        .AddSingleton<ICommandHandlerAsync<NewGitHubRepoCommand, Repository>, RemoteGithubCommandHandlerAsync>()
+                        .AddSingleton<ICommandHandlerAsync<RemoteGithubCommand, Repository>, RemoteGithubCommandHandlerAsync>()
                         .AddSingleton<IHttpService, HttpService>()
                         .AddSingleton<ICommandHandlerAsync<DownloadTemplateFilesCommand, IEnumerable<string>>, DownloadTemplateFilesCommandHandlerAsync>()
                         .AddSingleton<ICommandHandler, CommandHandler>()
@@ -40,7 +40,7 @@ namespace NRepo
                             {
                                 Credentials = new Credentials(Environment.GetEnvironmentVariable("NREPO_GITHUB_TOKEN"))
                             };
-                            return client;
+                            return (IGitHubClient) client;
                         })
                         .AddSingleton(PhysicalConsole.Singleton);
                 })
