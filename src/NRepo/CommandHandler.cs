@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public class CommandHandler : ICommandHandler
     {

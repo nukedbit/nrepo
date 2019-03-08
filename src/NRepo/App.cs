@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
-using NRepo.Services;
+using NukedBit.NRepo.Services;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     [HelpOption]
     public class App

@@ -1,6 +1,6 @@
 ﻿using LibGit2Sharp;
 
-namespace NRepo.Services
+namespace NukedBit.NRepo.Services
 { 
     public class RepositoryService : IRepositoryService
     {

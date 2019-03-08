@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public interface ICommandHandler
     {

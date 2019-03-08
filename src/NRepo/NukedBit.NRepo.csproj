@@ -7,10 +7,10 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>nrepo</ToolCommandName>
     <PackageOutputPath>../../drop/</PackageOutputPath>
-    <AssemblyName>NRepo</AssemblyName>
-    <RootNamespace>NRepo</RootNamespace>
+    <AssemblyName>NukedBit.NRepo</AssemblyName>
+    <RootNamespace>NukedBit.NRepo</RootNamespace>
     <LangVersion>8.0</LangVersion>
-    <PackageId>NRepo</PackageId>
+    <PackageId>NukedBit.NRepo</PackageId>
     <PackageVersion>0.1.0</PackageVersion>
     <Authors>NukedBit</Authors>
     <Description></Description>
@@ -18,8 +18,8 @@
     <PackageReleaseNotes></PackageReleaseNotes>
     <Copyright>Copyright 2018 (c) NukedBit. All rights reserved.</Copyright>
     <PackageTags>nrepo git github global tool</PackageTags>
-    <RootNamespace>NRepo</RootNamespace>
-    <Product>nrepo</Product>     
+    <RootNamespace>NukedBit.NRepo</RootNamespace>
+    <Product>NukedBit.NRepo</Product>     
     <AssemblyVersion>0.1.0</AssemblyVersion>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
     <FileVersion>0.1.0</FileVersion>

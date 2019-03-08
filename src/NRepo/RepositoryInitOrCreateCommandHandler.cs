@@ -1,7 +1,7 @@
 ﻿using System.IO;
-using NRepo.Services;
+using NukedBit.NRepo.Services;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public class RepositoryInitOrCreateCommandHandler : ICommandHandler<RepositoryInitOrCreateCommand>
     {

@@ -5,10 +5,10 @@ using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using NRepo.Services;
+using NukedBit.NRepo.Services;
 using Octokit;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     class Program
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace NRepo.Services
+namespace NukedBit.NRepo.Services
 {
     public class FileService : IFileService
     {

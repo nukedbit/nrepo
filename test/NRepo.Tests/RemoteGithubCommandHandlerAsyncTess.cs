@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using NRepo.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using NukedBit.NRepo;
+using NukedBit.NRepo.Services;
 using Octokit;
 using Xunit;
 

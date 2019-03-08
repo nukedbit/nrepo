@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NRepo\NRepo.csproj" />
+    <ProjectReference Include="..\..\src\NRepo\NukedBit.NRepo.csproj" />
   </ItemGroup>
 
 </Project>

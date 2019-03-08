@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NRepo.Services
+namespace NukedBit.NRepo.Services
 {
     public class ConsoleService : IConsoleService
     {

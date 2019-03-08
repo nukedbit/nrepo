@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Octokit;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public class GitHubLicenseApi : IGitHubLicenseApi
     {

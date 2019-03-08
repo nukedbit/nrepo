@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using LibGit2Sharp;
-using NRepo.Services;
+using NukedBit.NRepo.Services;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public class FinishRepoSetupCommandHandler: ICommandHandler<FinishRepoSetupCommand>
     {

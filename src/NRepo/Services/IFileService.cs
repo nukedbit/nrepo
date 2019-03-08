@@ -1,4 +1,4 @@
-﻿namespace NRepo.Services
+﻿namespace NukedBit.NRepo.Services
 {
     public interface IFileService
     {

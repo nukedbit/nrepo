@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public class FinishRepoSetupCommand
     {

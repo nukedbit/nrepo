@@ -1,9 +1,9 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
-using NRepo.Services;
+using NukedBit.NRepo.Services;
 using Octokit;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public class RemoteGithubCommandHandlerAsync : ICommandHandlerAsync<RemoteGithubCommand, Repository>
     {

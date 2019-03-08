@@ -1,4 +1,4 @@
-﻿namespace NRepo
+﻿namespace NukedBit.NRepo
 {
     public class RepositoryInitOrCreateCommand 
     {

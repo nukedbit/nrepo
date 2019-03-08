@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using NRepo.Services;
+using NukedBit.NRepo.Services;
 
-namespace NRepo
+namespace NukedBit.NRepo
 {
     public  class DownloadTemplateFilesCommandHandlerAsync : ICommandHandlerAsync<DownloadTemplateFilesCommand, IEnumerable<string>>
     {

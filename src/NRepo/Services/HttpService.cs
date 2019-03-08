@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 
-namespace NRepo.Services
+namespace NukedBit.NRepo.Services
 {
     public class HttpService : IHttpService
     {

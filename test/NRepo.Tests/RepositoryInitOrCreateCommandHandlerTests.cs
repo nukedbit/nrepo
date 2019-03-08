@@ -1,8 +1,9 @@
 using System;
 using System.IO;
-using NRepo.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
+using NukedBit.NRepo;
+using NukedBit.NRepo.Services;
 using Xunit;
 
 namespace NRepo.Tests

@@ -1,9 +1,8 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NRepo.Services
+namespace NukedBit.NRepo.Services
 {
     public class LicenseService : ILicenseService
     {

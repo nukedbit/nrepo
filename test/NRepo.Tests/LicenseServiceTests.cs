@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using NRepo.Services;
 using NSubstitute;
+using NukedBit.NRepo;
+using NukedBit.NRepo.Services;
 using Octokit;
 using Xunit;
 
