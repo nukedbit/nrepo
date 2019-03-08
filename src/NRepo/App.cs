@@ -32,9 +32,8 @@ namespace NRepo
                         Console.WriteLine("Exit");
                         return;
                     }
-                }
-                path = string.IsNullOrEmpty(path) ? Environment.CurrentDirectory : path;                
-                await _repositoryHandler.ExecuteAsync(false, path);
+                }                                
+                await _repositoryHandler.ExecuteAsync(path);
             }
             else
             {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace NRepo
@@ -17,6 +18,7 @@ namespace NRepo
         {
             Console.WriteLine("Downloading licenses list ...");
             var infos = await _gitHubLicenseApi.ListAsync();
+            infos = infos.OrderBy(l => l.Name).ToList();
             Console.Clear();
             Console.WriteLine("Choose a License:");
             Console.WriteLine("Enter exit to cancel");

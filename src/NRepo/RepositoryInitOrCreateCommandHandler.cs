@@ -12,7 +12,7 @@ namespace NRepo
         private readonly RemoteGithubCommandHandler _remoteGithubCommandHandler;
         private readonly LicensePicker _licensePicker;
 
-        public RepositoryInitOrCreateCommandHandler(RemoteGithubCommandHandler remoteGithubCommandHandler,LicensePicker licensePicker)
+        public RepositoryInitOrCreateCommandHandler(RemoteGithubCommandHandler remoteGithubCommandHandler, LicensePicker licensePicker)
         {
             _remoteGithubCommandHandler = remoteGithubCommandHandler;
             _licensePicker = licensePicker;
@@ -27,13 +27,13 @@ namespace NRepo
             return "README.md";
         }
 
-        public async Task ExecuteAsync(bool isInit, string repoPath)
+        public async Task ExecuteAsync(string repoPath)
         {
-            repoPath = isInit ? Environment.CurrentDirectory : Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, repoPath));
+            repoPath = string.IsNullOrEmpty(repoPath) ? Environment.CurrentDirectory : Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, repoPath));
 
             var repoAlreadyInitialized = Directory.Exists(Path.Combine(repoPath, ".git"));
 
-            if(!repoAlreadyInitialized)
+            if (!repoAlreadyInitialized)
             {
                 Console.WriteLine("Initializing repo..");
                 Repository.Init(repoPath);
@@ -47,7 +47,7 @@ namespace NRepo
             {
                 filesToAdd.Add(licenseFile);
             }
-            
+
             filesToAdd.Add(CreateReadMe());
 
             using (var repository = new Repository(repoPath, new RepositoryOptions()))
@@ -59,15 +59,19 @@ namespace NRepo
                 SetOriginRemote(repository, githubRepository);
 
                 Console.WriteLine();
-                Console.WriteLine("Remote Url: {0}",githubRepository.Url);
+                Console.WriteLine("Remote Url: {0}", githubRepository != null ? githubRepository.Url : "None");
             }
-           
+
             Console.WriteLine();
             Console.WriteLine("Done.");
         }
 
         private static void SetOriginRemote(Repository repository, Octokit.Repository githubRepository)
         {
+            if (githubRepository is null)
+            {
+                return;
+            }
             if (repository.Network.Remotes.Any(r => r.Name == "origin"))
             {
                 repository.Network.Remotes.Update("origin", r => r.Url = githubRepository.CloneUrl);

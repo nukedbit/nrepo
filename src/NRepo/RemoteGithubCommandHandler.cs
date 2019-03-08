@@ -21,12 +21,13 @@ namespace NRepo
 
             Console.WriteLine();
             Console.WriteLine("Time to pick a remote:");
-            Console.WriteLine("1: Create New");
-            Console.WriteLine("2: Search Existing");
+            Console.WriteLine("1: Create New.");
+            Console.WriteLine("2: Search Existing.");
+            Console.WriteLine("3: I'll do it later.");
 
-            var choice = ConsoleUtils.ReadInputNumber(min: 1, max: 2);
+            var choice = ConsoleUtils.ReadInputNumber(min: 1, max: 3);
 
-            if (choice is null)
+            if (choice is null || choice == 3)
             {
                 return null;
             }
