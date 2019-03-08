@@ -1,7 +1,4 @@
-﻿using System;
-using System.IO;
-using System.Threading.Tasks;
-using LibGit2Sharp;
+﻿using System.IO;
 using NRepo.Services;
 
 namespace NRepo
@@ -10,26 +7,29 @@ namespace NRepo
     {
         private readonly IFileService _fileService;
         private readonly IConsoleService _consoleService;
+        private readonly IRepositoryService _repositoryService;
 
-        public RepositoryInitOrCreateCommandHandler(IFileService fileService, IConsoleService consoleService)
+        public RepositoryInitOrCreateCommandHandler(IFileService fileService, IConsoleService consoleService, IRepositoryService repositoryService)
         {
             _fileService = fileService;
             _consoleService = consoleService;
+            _repositoryService = repositoryService;
         }
 
         public void Handle(RepositoryInitOrCreateCommand command)
         {
-            command.RepoPath = string.IsNullOrEmpty(command.RepoPath) ? _fileService.GetCurrentDirectory() : Path.GetFullPath(Path.Combine(_fileService.GetCurrentDirectory(), command.RepoPath));
+            var repoPath = string.IsNullOrEmpty(command.RepoPath) ? _fileService.GetCurrentDirectory() : Path.GetFullPath(Path.Combine(_fileService.GetCurrentDirectory(), command.RepoPath));
 
-            var repoAlreadyInitialized = _fileService.DirectoryExists(Path.Combine(command.RepoPath, ".git"));
+            var gitFolderPath = Path.Combine(repoPath, ".git");
+            var repoAlreadyInitialized = _fileService.DirectoryExists(gitFolderPath);
 
             if (!repoAlreadyInitialized)
             {
                 _consoleService.WriteLine("Initializing repo..");
-                Repository.Init(command.RepoPath);
+                _repositoryService.Init(repoPath);
             }
 
-            _fileService.SetCurrentDirectory(command.RepoPath);
+            _fileService.SetCurrentDirectory(repoPath);
         }
     }
 }

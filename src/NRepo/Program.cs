@@ -10,41 +10,6 @@ using Octokit;
 
 namespace NRepo
 {
-    public interface ICommandHandler
-    {
-        Task<TResult> HandleAsync<TCommand, TResult>(TCommand command);
-        Task HandleAsync<TCommand>(TCommand command);
-        void Handle<TCommand>(TCommand command);
-    }
-
-    public class CommandHandler : ICommandHandler
-    {
-        private readonly IServiceProvider _serviceProvider;
-
-        public CommandHandler(IServiceProvider serviceProvider)
-        {
-            _serviceProvider = serviceProvider;
-        }
-
-        public Task<TResult> HandleAsync<TCommand, TResult>(TCommand command)
-        {
-            var handlerAsync = _serviceProvider.GetService<ICommandHandlerAsync<TCommand, TResult>>();
-            return handlerAsync.HandleAsync(command);
-        }
-
-        public Task HandleAsync<TCommand>(TCommand command)
-        {
-            var handlerAsync = _serviceProvider.GetService<ICommandHandlerAsync<TCommand>>();
-            return handlerAsync.HandleAsync(command);
-        }
-
-        public void Handle<TCommand>(TCommand command)
-        {
-            var handlerAsync = _serviceProvider.GetService<ICommandHandler<TCommand>>();
-            handlerAsync.Handle(command);
-        }
-    }
-
     class Program
     {
 
@@ -68,6 +33,7 @@ namespace NRepo
                         .AddSingleton<IHttpService, HttpService>()
                         .AddSingleton<ICommandHandlerAsync<DownloadTemplateFilesCommand, IEnumerable<string>>, DownloadTemplateFilesCommandHandlerAsync>()
                         .AddSingleton<ICommandHandler, CommandHandler>()
+                        .AddSingleton<IRepositoryService, RepositoryService>()
                         .AddSingleton((_) =>
                         {
                             var client = new GitHubClient(new ProductHeaderValue("github-tools"))
