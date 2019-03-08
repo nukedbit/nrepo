@@ -6,26 +6,27 @@ using Octokit;
 
 namespace NRepo
 {
-    public class RemoteGithubCommandHandler
+    public class RemoteGithubCommandHandler : ICommandHandler<NewGitHubRepoCommand, Repository>
     {
         private readonly GitHubClient _client;
+        private readonly IConsoleService _consoleService;
 
-        public RemoteGithubCommandHandler(GitHubClient client)
+        public RemoteGithubCommandHandler(GitHubClient client, IConsoleService consoleService)
         {
             _client = client;
+            _consoleService = consoleService;
         }
 
         public async Task<Repository> HandleAsync(NewGitHubRepoCommand cmd)
         {
             Repository result = null;
 
-            Console.WriteLine();
-            Console.WriteLine("Time to pick a remote:");
-            Console.WriteLine("1: Create New.");
-            Console.WriteLine("2: Search Existing.");
-            Console.WriteLine("3: I'll do it later.");
-
-            var choice = ConsoleUtils.ReadInputNumber(min: 1, max: 3);
+            _consoleService.WriteLine();
+            _consoleService.WriteLine("Time to pick a remote:");
+            _consoleService.WriteLine("1: Create New.");
+            _consoleService.WriteLine("2: Search Existing.");
+            _consoleService.WriteLine("3: I'll do it later.");
+            var choice = _consoleService.ReadInputNumber(min: 1, max: 3);
 
             if (choice is null || choice == 3)
             {
@@ -39,10 +40,10 @@ namespace NRepo
                 }
                 catch (Octokit.RepositoryExistsException repositoryExistsException)
                 {
-                    Console.WriteLine("A repository with the same name already exist on GitHub.");
-                    Console.WriteLine("Repository Name: {0}", repositoryExistsException.RepositoryName);
-                    Console.WriteLine("Do you want to use this one?");
-                    if (ConsoleUtils.AskForConfirmation())
+                    _consoleService.WriteLine("A repository with the same name already exist on GitHub.");
+                    _consoleService.WriteLine("Repository Name: {0}", repositoryExistsException.RepositoryName);
+                    _consoleService.WriteLine("Do you want to use this one?");
+                    if (_consoleService.AskForConfirmation())
                     {
                         var user = await _client.User.Current();
                         result = await _client.Repository.Get(user.Login, repositoryExistsException.RepositoryName);
@@ -55,9 +56,9 @@ namespace NRepo
             }
             else if (choice == 2)
             {
-                Console.WriteLine("You can type a search string:");
-                var search = Console.ReadLine();
-                Console.WriteLine("Retrieving repo list...");
+                _consoleService.WriteLine("You can type a search string:");
+                var search = _consoleService.ReadLine();
+                _consoleService.WriteLine("Retrieving repo list...");
                 var repoList = await _client.Repository.GetAllForCurrent(new RepositoryRequest());
                 if (!string.IsNullOrEmpty(search))
                 {
@@ -71,15 +72,14 @@ namespace NRepo
                         .ToList();
                 }
 
-                Console.WriteLine("Pick a remote:");
+                _consoleService.WriteLine("Pick a remote:");
 
                 for (var i = 0; i < repoList.Count; i++)
                 {
-                    Console.WriteLine("{0}: {1}", i + 1, repoList[i].Name);
+                    _consoleService.WriteLine("{0}: {1}", i + 1, repoList[i].Name);
                 }
 
-
-                choice = ConsoleUtils.ReadInputNumber(min: 1, max: repoList.Count);
+                choice = _consoleService.ReadInputNumber(min: 1, max: repoList.Count);
                 if (choice is null)
                 {
                     return null;

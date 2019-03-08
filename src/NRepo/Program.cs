@@ -17,12 +17,17 @@ namespace NRepo
                 {
                     builder.AddConsole();
                 })
-                .ConfigureServices((context, services) => {
+                .ConfigureServices((context, services) =>
+                {
                     services
-                        .AddSingleton<RemoteGithubCommandHandler>()
-                        .AddSingleton<LicensePicker>()
-                        .AddSingleton<RepositoryInitOrCreateCommandHandler>()
+                        .AddSingleton<ILicensePicker, LicensePicker>()
+                        .AddSingleton<IRepositoryInitOrCreateCommandHandler, RepositoryInitOrCreateCommandHandler>()
                         .AddSingleton<IGitHubLicenseApi, GitHubLicenseApi>()
+                        .AddSingleton<IFileService, FileService>()
+                        .AddSingleton<IConsoleService, ConsoleService>()
+                        .AddSingleton<ITemplateFilesService, TemplateFilesService>()
+                        .AddSingleton<ICommandHandler<NewGitHubRepoCommand, Repository>, RemoteGithubCommandHandler>()
+                        .AddSingleton<IHttpService, HttpService>()
                         .AddSingleton((_) =>
                         {
                             var client = new GitHubClient(new ProductHeaderValue("github-tools"))
@@ -31,7 +36,7 @@ namespace NRepo
                             };
                             return client;
                         })
-                        .AddSingleton<IConsole>(PhysicalConsole.Singleton);
+                        .AddSingleton(PhysicalConsole.Singleton);
                 })
                 .RunCommandLineApplicationAsync<App>(args);
     }

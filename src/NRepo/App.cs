@@ -9,11 +9,13 @@ namespace NRepo
     [HelpOption]
     public class App
     {
-        private readonly RepositoryInitOrCreateCommandHandler _repositoryHandler;
+        private readonly IRepositoryInitOrCreateCommandHandler _repositoryHandler;
+        private readonly IConsoleService _consoleService;
 
-        public App(RepositoryInitOrCreateCommandHandler repositoryHandler)
+        public App(IRepositoryInitOrCreateCommandHandler repositoryHandler, IConsoleService consoleService)
         {
             _repositoryHandler = repositoryHandler;
+            _consoleService = consoleService;
         }
 
         [Option(Description = "Create a new Repository at the specified path, could be a new folder or an existing one.", ShortName = "n")]
@@ -21,32 +23,28 @@ namespace NRepo
 
         private async Task OnExecuteAsync()
         {
-            var (create, path ) = RepoPath;
+            var (create, path) = RepoPath;
             if (create)
             {
                 if (string.IsNullOrEmpty(path))
                 {
-                    Console.WriteLine("Repository will be created on the current directory.");
-                    if (!ConsoleUtils.AskForConfirmation())
+                    _consoleService.WriteLine("Repository will be created on the current directory.");
+                    if (!_consoleService.AskForConfirmation())
                     {
-                        Console.WriteLine("Exit");
+                        _consoleService.WriteLine("Exit");
                         return;
                     }
-                }                                
-                await _repositoryHandler.ExecuteAsync(path);
+                }
+                await _repositoryHandler.ExecuteAsync(new RepositoryInitOrCreateCommand(path));
             }
             else
             {
                 var versionString = Assembly.GetEntryAssembly()
                     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()
-                    .InformationalVersion
-                    .ToString();
-                Console.WriteLine($"nrepo v{versionString}");
-                Console.WriteLine(".NET GitHub Repo Setup");
-                var currentColor = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine("This tool is on alpha state! be safe with your data!");
-                Console.ForegroundColor = currentColor;
+                    .InformationalVersion;
+                _consoleService.WriteLine($"nrepo v{versionString}");
+                _consoleService.WriteLine(".NET GitHub Repo Setup");
+                _consoleService.WriteLineColored(ConsoleColor.Red, "This tool is on alpha state! be safe with your data!");
             }
         }
     }

@@ -7,41 +7,48 @@ using LibGit2Sharp;
 
 namespace NRepo
 {
-    public class RepositoryInitOrCreateCommandHandler
+    public class RepositoryInitOrCreateCommandHandler : IRepositoryInitOrCreateCommandHandler
     {
-        private readonly RemoteGithubCommandHandler _remoteGithubCommandHandler;
-        private readonly LicensePicker _licensePicker;
+        private readonly ICommandHandler<NewGitHubRepoCommand, Octokit.Repository> _remoteGithubCommandHandler;
+        private readonly ILicensePicker _licensePicker;
+        private readonly ITemplateFilesService _templateFilesService;
+        private readonly IFileService _fileService;
+        private readonly IConsoleService _consoleService;
 
-        public RepositoryInitOrCreateCommandHandler(RemoteGithubCommandHandler remoteGithubCommandHandler, LicensePicker licensePicker)
+        public RepositoryInitOrCreateCommandHandler(ICommandHandler<NewGitHubRepoCommand, Octokit.Repository> remoteGithubCommandHandler, ILicensePicker licensePicker,
+            ITemplateFilesService templateFilesService, IFileService fileService, IConsoleService consoleService)
         {
             _remoteGithubCommandHandler = remoteGithubCommandHandler;
             _licensePicker = licensePicker;
+            _templateFilesService = templateFilesService;
+            _fileService = fileService;
+            _consoleService = consoleService;
         }
 
         public string CreateReadMe()
         {
-            var repoName = new DirectoryInfo(Environment.CurrentDirectory).Name;
+            var repoName = _fileService.GetCurrentDirectoryName();
             var name = repoName.Replace("-", " ");
-            var filename = Path.Combine(Environment.CurrentDirectory, "./README.md");
-            File.WriteAllText(filename, "# " + name);
+            var filename = Path.Combine(_fileService.GetCurrentDirectory(), "./README.md");
+            _fileService.WriteAllText(filename, "# " + name);
             return "README.md";
         }
 
-        public async Task ExecuteAsync(string repoPath)
+        public async Task ExecuteAsync(RepositoryInitOrCreateCommand command)
         {
-            repoPath = string.IsNullOrEmpty(repoPath) ? Environment.CurrentDirectory : Path.GetFullPath(Path.Combine(Environment.CurrentDirectory, repoPath));
+            command.RepoPath = string.IsNullOrEmpty(command.RepoPath) ? _fileService.GetCurrentDirectory() : Path.GetFullPath(Path.Combine(_fileService.GetCurrentDirectory(), command.RepoPath));
 
-            var repoAlreadyInitialized = Directory.Exists(Path.Combine(repoPath, ".git"));
+            var repoAlreadyInitialized = _fileService.DirectoryExists(Path.Combine(command.RepoPath, ".git"));
 
             if (!repoAlreadyInitialized)
             {
-                Console.WriteLine("Initializing repo..");
-                Repository.Init(repoPath);
+                _consoleService.WriteLine("Initializing repo..");
+                Repository.Init(command.RepoPath);
             }
 
-            Environment.CurrentDirectory = repoPath;
+            _fileService.SetCurrentDirectory(command.RepoPath);
 
-            var filesToAdd = await RepoFiles.DownloadAsync();
+            var filesToAdd = await _templateFilesService.DownloadAsync();
 
             if (await _licensePicker.PickLicenseAsync() is var licenseFile)
             {
@@ -50,20 +57,20 @@ namespace NRepo
 
             filesToAdd.Add(CreateReadMe());
 
-            using (var repository = new Repository(repoPath, new RepositoryOptions()))
+            using (var repository = new Repository(command.RepoPath, new RepositoryOptions()))
             {
                 AddFilesToGitRepository(filesToAdd, repository);
-                var repoName = new DirectoryInfo(Environment.CurrentDirectory).Name;
+                var repoName = _fileService.GetCurrentDirectoryName();
                 var githubRepository = await _remoteGithubCommandHandler.HandleAsync(new NewGitHubRepoCommand(repoName));
 
                 SetOriginRemote(repository, githubRepository);
 
-                Console.WriteLine();
-                Console.WriteLine("Remote Url: {0}", githubRepository != null ? githubRepository.Url : "None");
+                _consoleService.WriteLine();
+                _consoleService.WriteLine("Remote Url: {0}", githubRepository != null ? githubRepository.Url : "None");
             }
 
-            Console.WriteLine();
-            Console.WriteLine("Done.");
+            _consoleService.WriteLine();
+            _consoleService.WriteLine("Done.");
         }
 
         private static void SetOriginRemote(Repository repository, Octokit.Repository githubRepository)
@@ -82,11 +89,11 @@ namespace NRepo
             }
         }
 
-        private static void AddFilesToGitRepository(List<string> filesToAdd, Repository repository)
+        private void AddFilesToGitRepository(List<string> filesToAdd, Repository repository)
         {
             foreach (var file in filesToAdd)
             {
-                Console.WriteLine("Adding file {0}", file);
+                _consoleService.WriteLine("Adding file {0}", file);
                 repository.Index.Add(file);
                 repository.Index.Write();
             }
