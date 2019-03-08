@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 
-namespace NRepo
+namespace NRepo.Services
 {
     public class FileService : IFileService
     {

@@ -5,13 +5,8 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace NRepo
+namespace NRepo.Services
 {
-    public interface ITemplateFilesService
-    {
-        Task<List<string>> DownloadAsync();
-    }
-
     public class TemplateFilesService : ITemplateFilesService
     {
         private readonly IFileService _fileService;

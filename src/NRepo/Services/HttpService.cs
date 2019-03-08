@@ -1,16 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Net;
-using System.Text;
+﻿using System.Net;
 using System.Threading.Tasks;
 
-namespace NRepo
+namespace NRepo.Services
 {
-    public interface IHttpService
-    {
-        Task DownloadFileTaskAsync(string url, string filePath);
-    }
-
     public class HttpService : IHttpService
     {
         public async Task DownloadFileTaskAsync(string url, string filePath)

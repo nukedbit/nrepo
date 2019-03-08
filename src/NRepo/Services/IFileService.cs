@@ -1,4 +1,4 @@
-﻿namespace NRepo
+﻿namespace NRepo.Services
 {
     public interface IFileService
     {

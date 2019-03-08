@@ -3,20 +3,15 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace NRepo
+namespace NRepo.Services
 {
-    public interface ILicensePicker
-    {
-        Task<string> PickLicenseAsync();
-    }
-
-    public class LicensePicker : ILicensePicker
+    public class LicenseService : ILicenseService
     {
         private readonly IGitHubLicenseApi _gitHubLicenseApi;
         private readonly IConsoleService _consoleService;
         private readonly IFileService _fileService;
 
-        public LicensePicker(IGitHubLicenseApi gitHubLicenseApi, IConsoleService consoleService, IFileService fileService)
+        public LicenseService(IGitHubLicenseApi gitHubLicenseApi, IConsoleService consoleService, IFileService fileService)
         {
             _gitHubLicenseApi = gitHubLicenseApi;
             _consoleService = consoleService;

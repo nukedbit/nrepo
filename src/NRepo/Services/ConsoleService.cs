@@ -1,21 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using JetBrains.Annotations;
 
-namespace NRepo
+namespace NRepo.Services
 {
-    public interface IConsoleService
-    {
-        void WriteLine(string format, [NotNull] params object[] args);
-        void WriteLine(string str);
-        void WriteLine();
-        bool AskForConfirmation();
-        int? ReadInputNumber(int min, int max, string exitKey = "exit");
-        void WriteLineColored(ConsoleColor color, string format, [NotNull] params object[] args);
-        string ReadLine();
-    }
-
     public class ConsoleService : IConsoleService
     {
         public void WriteLine(string format, [NotNull] params object[] args) => Console.WriteLine(format, args);
