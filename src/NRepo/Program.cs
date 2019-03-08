@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using McMaster.Extensions.CommandLineUtils;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,41 @@ using Octokit;
 
 namespace NRepo
 {
+    public interface ICommandHandler
+    {
+        Task<TResult> HandleAsync<TCommand, TResult>(TCommand command);
+        Task HandleAsync<TCommand>(TCommand command);
+        void Handle<TCommand>(TCommand command);
+    }
+
+    public class CommandHandler : ICommandHandler
+    {
+        private readonly IServiceProvider _serviceProvider;
+
+        public CommandHandler(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public Task<TResult> HandleAsync<TCommand, TResult>(TCommand command)
+        {
+            var handlerAsync = _serviceProvider.GetService<ICommandHandlerAsync<TCommand, TResult>>();
+            return handlerAsync.HandleAsync(command);
+        }
+
+        public Task HandleAsync<TCommand>(TCommand command)
+        {
+            var handlerAsync = _serviceProvider.GetService<ICommandHandlerAsync<TCommand>>();
+            return handlerAsync.HandleAsync(command);
+        }
+
+        public void Handle<TCommand>(TCommand command)
+        {
+            var handlerAsync = _serviceProvider.GetService<ICommandHandler<TCommand>>();
+            handlerAsync.Handle(command);
+        }
+    }
+
     class Program
     {
 
@@ -21,13 +57,16 @@ namespace NRepo
                 {
                     services
                         .AddSingleton<ILicensePicker, LicensePicker>()
-                        .AddSingleton<IRepositoryInitOrCreateCommandHandler, RepositoryInitOrCreateCommandHandler>()
+                        .AddSingleton<ICommandHandler<RepositoryInitOrCreateCommand>, RepositoryInitOrCreateCommandHandler>()
+                        .AddSingleton<ICommandHandler<FinishRepoSetupCommand>, FinishRepoSetupCommandHandler>()
                         .AddSingleton<IGitHubLicenseApi, GitHubLicenseApi>()
                         .AddSingleton<IFileService, FileService>()
                         .AddSingleton<IConsoleService, ConsoleService>()
                         .AddSingleton<ITemplateFilesService, TemplateFilesService>()
-                        .AddSingleton<ICommandHandler<NewGitHubRepoCommand, Repository>, RemoteGithubCommandHandler>()
+                        .AddSingleton<ICommandHandlerAsync<NewGitHubRepoCommand, Repository>, RemoteGithubCommandHandlerAsync>()
                         .AddSingleton<IHttpService, HttpService>()
+                        .AddSingleton<ICommandHandlerAsync<DownloadTemplateFilesCommand, IEnumerable<string>>, DownloadTemplateFilesCommandHandlerAsync>()
+                        .AddSingleton<ICommandHandler, CommandHandler>()
                         .AddSingleton((_) =>
                         {
                             var client = new GitHubClient(new ProductHeaderValue("github-tools"))

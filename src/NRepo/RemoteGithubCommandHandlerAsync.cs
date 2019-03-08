@@ -6,12 +6,12 @@ using Octokit;
 
 namespace NRepo
 {
-    public class RemoteGithubCommandHandler : ICommandHandler<NewGitHubRepoCommand, Repository>
+    public class RemoteGithubCommandHandlerAsync : ICommandHandlerAsync<NewGitHubRepoCommand, Repository>
     {
         private readonly GitHubClient _client;
         private readonly IConsoleService _consoleService;
 
-        public RemoteGithubCommandHandler(GitHubClient client, IConsoleService consoleService)
+        public RemoteGithubCommandHandlerAsync(GitHubClient client, IConsoleService consoleService)
         {
             _client = client;
             _consoleService = consoleService;

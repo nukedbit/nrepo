@@ -5,7 +5,12 @@ using System.Threading.Tasks;
 
 namespace NRepo
 {
-    public class LicensePicker
+    public interface ILicensePicker
+    {
+        Task<string> PickLicenseAsync();
+    }
+
+    public class LicensePicker : ILicensePicker
     {
         private readonly IGitHubLicenseApi _gitHubLicenseApi;
         private readonly IConsoleService _consoleService;

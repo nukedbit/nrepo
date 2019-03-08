@@ -1,6 +1,6 @@
 ﻿namespace NRepo
 {
-    public class RepositoryInitOrCreateCommand
+    public class RepositoryInitOrCreateCommand 
     {
         public RepositoryInitOrCreateCommand(string repoPath)
         {

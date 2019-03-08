@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -9,13 +10,15 @@ namespace NRepo
     [HelpOption]
     public class App
     {
-        private readonly IRepositoryInitOrCreateCommandHandler _repositoryHandler;
         private readonly IConsoleService _consoleService;
+        private readonly ICommandHandler _commandHandler;
+        private readonly IFileService _fileService;
 
-        public App(IRepositoryInitOrCreateCommandHandler repositoryHandler, IConsoleService consoleService)
+        public App(IConsoleService consoleService, ICommandHandler commandHandler, IFileService fileService)
         {
-            _repositoryHandler = repositoryHandler;
             _consoleService = consoleService;
+            _commandHandler = commandHandler;
+            _fileService = fileService;
         }
 
         [Option(Description = "Create a new Repository at the specified path, could be a new folder or an existing one.", ShortName = "n")]
@@ -35,7 +38,13 @@ namespace NRepo
                         return;
                     }
                 }
-                await _repositoryHandler.ExecuteAsync(new RepositoryInitOrCreateCommand(path));
+                _commandHandler.Handle(new RepositoryInitOrCreateCommand(path));
+                var filesToAdd = await _commandHandler.HandleAsync<DownloadTemplateFilesCommand, IEnumerable<string>>(
+                    new DownloadTemplateFilesCommand());
+                var repoCommand = new NewGitHubRepoCommand(_fileService.GetCurrentDirectoryName());
+                var githubRepository = 
+                    await _commandHandler.HandleAsync<NewGitHubRepoCommand, Octokit.Repository>(repoCommand);
+                _commandHandler.Handle(new FinishRepoSetupCommand(filesToAdd, githubRepository.CloneUrl));
             }
             else
             {
