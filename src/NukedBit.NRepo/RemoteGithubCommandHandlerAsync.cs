@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using NukedBit.NRepo.Services;
 using Octokit;
 using Optional;
+using Optional.Unsafe;
 
 namespace NukedBit.NRepo
 {
@@ -26,11 +27,11 @@ namespace NukedBit.NRepo
             _consoleService.WriteLine("3: I'll do it later.");
             var choice = _consoleService.ReadInputNumber(min: 1, max: 3);
 
-            if (choice is null || choice == 3)
+            if (!choice.HasValue || choice.ValueOrFailure() == 3)
             {
                 return Option.None<Repository>();
             }
-            else if (choice == 1)
+            else if (choice.ValueOrFailure() == 1)
             {
                 try
                 {
@@ -52,7 +53,7 @@ namespace NukedBit.NRepo
                     }
                 }
             }
-            else if (choice == 2)
+            else if (choice.ValueOrFailure() == 2)
             {
                 _consoleService.WriteLine("You can type a search string:");
                 var search = _consoleService.ReadLine();
@@ -78,12 +79,12 @@ namespace NukedBit.NRepo
                 }
 
                 choice = _consoleService.ReadInputNumber(min: 1, max: repoList.Count);
-                if (choice is null)
+                if (!choice.HasValue)
                 {
                     return Option.None<Repository>();
                 }
 
-                return Option.Some(repoList[choice.Value - 1]);
+                return Option.Some(repoList[choice.ValueOrFailure() - 1]);
             }
 
             return Option.None<Repository>();

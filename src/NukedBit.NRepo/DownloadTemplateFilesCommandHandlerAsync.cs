@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using NukedBit.NRepo.Services;
+using Optional.Unsafe;
 
 namespace NukedBit.NRepo
 {
@@ -31,8 +32,8 @@ namespace NukedBit.NRepo
         public async Task<IEnumerable<string>> HandleAsync(DownloadTemplateFilesCommand command)
         {
             var filesToAdd = await _templateFilesService.DownloadAsync();
-
-            if (await _licenseService.PickLicenseAsync() is string licenseFile)
+            var license = await _licenseService.PickLicenseAsync();
+            if (license.ValueOrDefault() is string licenseFile)
             {
                 filesToAdd.Add(licenseFile);
             }

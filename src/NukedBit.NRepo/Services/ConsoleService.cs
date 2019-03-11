@@ -1,4 +1,5 @@
 ﻿using System;
+using Optional;
 
 namespace NukedBit.NRepo.Services
 {
@@ -42,7 +43,7 @@ namespace NukedBit.NRepo.Services
             }
         }
 
-        public int? ReadInputNumber(int min, int max, string exitKey = "exit")
+        public Option<int> ReadInputNumber(int min, int max, string exitKey = "exit")
         {
             var defaultColor = Console.ForegroundColor;
             while (true)
@@ -53,7 +54,7 @@ namespace NukedBit.NRepo.Services
                 var line = Console.ReadLine();
                 if (int.TryParse(line, out var result) && result >= min && result <= max)
                 {
-                    return result;
+                    return Option.Some(result);
                 }
 
                 if (line?.Trim() == exitKey)
@@ -62,7 +63,7 @@ namespace NukedBit.NRepo.Services
                 }
             }
 
-            return null;
+            return Option.None<int>();
         }
     }
 }

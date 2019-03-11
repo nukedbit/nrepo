@@ -22,7 +22,7 @@ namespace NRepo.Tests
             var consoleService = Substitute.For<IConsoleService>();
             var handler = new RemoteGithubCommandHandlerAsync(gitHubClient, consoleService);
 
-            consoleService.ReadInputNumber(min: 1, max: 3).Returns((int?)null);
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(Option.None<int>());
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
@@ -41,7 +41,7 @@ namespace NRepo.Tests
             var consoleService = Substitute.For<IConsoleService>();
             var handler = new RemoteGithubCommandHandlerAsync(gitHubClient, consoleService);
 
-            consoleService.ReadInputNumber(min: 1, max: 3).Returns(1);
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(Option.Some(1));
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
@@ -69,7 +69,7 @@ namespace NRepo.Tests
 
             consoleService.AskForConfirmation().Returns(true);
 
-            consoleService.ReadInputNumber(min: 1, max: 3).Returns(1);
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(Option.Some(1));
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
@@ -91,8 +91,8 @@ namespace NRepo.Tests
 
             var consoleService = Substitute.For<IConsoleService>();
             consoleService.ReadLine().Returns("");
-            consoleService.ReadInputNumber(min: 1, max: 3).Returns(2);
-            consoleService.ReadInputNumber(min: 1, max: 2).Returns(1);
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(Option.Some(2));
+            consoleService.ReadInputNumber(min: 1, max: 2).Returns(Option.Some(1));
 
             var handler = new RemoteGithubCommandHandlerAsync(gitHubClient, consoleService);             
 
@@ -115,7 +115,7 @@ namespace NRepo.Tests
 
             var consoleService = Substitute.For<IConsoleService>();
             consoleService.ReadLine().Returns("");
-            consoleService.ReadInputNumber(min: 1, max: 3).Returns(3);
+            consoleService.ReadInputNumber(min: 1, max: 3).Returns(Option.Some(3));
 
             var handler = new RemoteGithubCommandHandlerAsync(gitHubClient, consoleService);
 

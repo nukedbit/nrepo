@@ -1,4 +1,5 @@
 ﻿using System;
+using Optional;
 
 namespace NukedBit.NRepo.Services
 {
@@ -8,7 +9,7 @@ namespace NukedBit.NRepo.Services
         void WriteLine(string str);
         void WriteLine();
         bool AskForConfirmation();
-        int? ReadInputNumber(int min, int max, string exitKey = "exit");
+        Option<int> ReadInputNumber(int min, int max, string exitKey = "exit");
         void WriteLineColored(ConsoleColor color, string format, params object[] args);
         string ReadLine();
     }

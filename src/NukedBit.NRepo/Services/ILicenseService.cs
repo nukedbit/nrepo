@@ -1,9 +1,10 @@
 ﻿using System.Threading.Tasks;
+using Optional;
 
 namespace NukedBit.NRepo.Services
 {
     public interface ILicenseService
     {
-        Task<string> PickLicenseAsync();
+        Task<Option<string>> PickLicenseAsync();
     }
 }

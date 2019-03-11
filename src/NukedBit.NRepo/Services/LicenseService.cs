@@ -1,6 +1,8 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Optional;
+using Optional.Unsafe;
 
 namespace NukedBit.NRepo.Services
 {
@@ -17,7 +19,7 @@ namespace NukedBit.NRepo.Services
             _fileService = fileService;
         }
 
-        public async Task<string> PickLicenseAsync()
+        public async Task<Option<string>> PickLicenseAsync()
         {
             _consoleService.WriteLine("Downloading licenses list ...");
             var infos = await _gitHubLicenseApi.ListAsync();
@@ -31,16 +33,16 @@ namespace NukedBit.NRepo.Services
             }
 
             var inputNumber = _consoleService.ReadInputNumber(min: 1, max: infos.Count);
-            if (inputNumber is int index && index >= 1 && index <= infos.Count)
+            if (inputNumber.ValueOrDefault() is int index && index >= 1 && index <= infos.Count)
             {
                 var licenseBody = await _gitHubLicenseApi.DownloadLicenseContentAsync(infos[index - 1]);
                 var licenseFile = "LICENSE";
                 var licenseFilePath = Path.Combine(_fileService.GetCurrentDirectory(), licenseFile);
                 _fileService.WriteAllText(licenseFilePath, licenseBody);
-                return licenseFile;
+                return Option.Some(licenseFile);
             }
 
-            return null;
+            return Option.None<string>();
         }
     }
 }

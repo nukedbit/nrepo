@@ -4,6 +4,8 @@ using NSubstitute;
 using NukedBit.NRepo;
 using NukedBit.NRepo.Services;
 using Octokit;
+using Optional;
+using Optional.Unsafe;
 using Xunit;
 
 namespace NRepo.Tests
@@ -36,7 +38,7 @@ namespace NRepo.Tests
             var fileService = Substitute.For<IFileService>();
             var service = new LicenseService(licenseApi, consoleService, fileService);
 
-            consoleService.ReadInputNumber(min: 1, max: 2).Returns(1);
+            consoleService.ReadInputNumber(min: 1, max: 2).Returns(Option.Some(1));
             var expectedLicenseMetadata = new LicenseMetadata("gpl", "gpl", "gpl", "idx2", "url2", false);
 
             licenseApi.ListAsync().Returns(new List<LicenseMetadata>()
@@ -51,7 +53,7 @@ namespace NRepo.Tests
 
             await licenseApi.Received(1).DownloadLicenseContentAsync(expectedLicenseMetadata);
 
-            Assert.Equal("LICENSE", result);
+            Assert.Equal("LICENSE", result.ValueOrDefault());
         }
 
         [Fact(DisplayName = "Do not choose a license")]
@@ -62,7 +64,7 @@ namespace NRepo.Tests
             var fileService = Substitute.For<IFileService>();
             var service = new LicenseService(licenseApi, consoleService, fileService);
 
-            consoleService.ReadInputNumber(min: 1, max: 2).Returns((int?)null);
+            consoleService.ReadInputNumber(min: 1, max: 2).Returns(Option.None<int>());
             var expectedLicenseMetadata = new LicenseMetadata("gpl", "gpl", "gpl", "idx2", "url2", false);
 
             licenseApi.ListAsync().Returns(new List<LicenseMetadata>()
@@ -73,7 +75,7 @@ namespace NRepo.Tests
 
             var result = await service.PickLicenseAsync();
 
-            Assert.Null(result);
+            Assert.Null(result.ValueOrDefault());
         }
     }
 }
