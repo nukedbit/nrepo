@@ -4,6 +4,11 @@
 
 ![NRepo Usage Animation](./nrepo.gif)
 
+# ChangeLog
+
+03/11/2019 - Output an error when the required github token is not specified
+03/11/2019 - During repo creation now nrepo ask for Public Or Private Visibility
+
 ## Info
 
 <p style="color:red">Beware this is a new tool, so be safe and backup your data.</p>
@@ -12,7 +17,7 @@
 It's a simple tool that allow you to create a new repository or init one inside an existing folder.
 
 Currently the tool support only c# repos with good defaults taken from the AspNetCore repos.
-The repo that will be created at github is going to be public.
+~~The repo that will be created at github is going to be public.~~
 
 
 
