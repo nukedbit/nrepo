@@ -35,7 +35,19 @@ namespace NukedBit.NRepo
             {
                 try
                 {
-                    return Option.Some(await _client.Repository.Create(new NewRepository(cmd.RepoName)));
+
+                    _consoleService.WriteLine("Your repository should be?");
+                    _consoleService.WriteLine("If you input \"exit\", will skip creating the repository.");
+                    _consoleService.WriteLine("1: Private");
+                    _consoleService.WriteLine("2: Public");
+                    var choiceOption = _consoleService.ReadInputNumber(1,2);
+                    var privateOption = choiceOption.Map((value) => value == 1 ? true : false);
+                    if (privateOption.ValueOrDefault() is bool visibility)
+                    {
+                        return Option.Some(await _client.Repository.Create(new NewRepository(cmd.RepoName){ Private = visibility}));
+                    }
+
+                    return Option.None<Repository>();
                 }
                 catch (Octokit.RepositoryExistsException repositoryExistsException)
                 {
