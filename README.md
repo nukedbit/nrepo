@@ -7,6 +7,7 @@
 # ChangeLog
 
 03/11/2019 - Output an error when the required github token is not specified
+
 03/11/2019 - During repo creation now nrepo ask for Public Or Private Visibility
 
 ## Info
@@ -36,7 +37,7 @@ It will add
 
 To install just issue this command, it require dotnet 2.2.200
 
-```dotnet tool install --global NukedBit.NRepo --version 0.1.0```
+```dotnet tool install --global NukedBit.NRepo --version 0.1.1```
 
 If you want to enable the remote creation of the github repository you need to setup the environment variable NREPO_GITHUB_TOKEN with your github token you can follow this guide on how to create one, you just need to select the repo permission and it’s children’s setting https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
 
