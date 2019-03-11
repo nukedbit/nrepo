@@ -38,6 +38,8 @@ To install just issue this command, it require dotnet 2.2.200
 
 ```dotnet tool install --global NukedBit.NRepo --version 0.1.0```
 
+If you want to enable the remote creation of the github repository you need to setup the environment variable NREPO_GITHUB_TOKEN with your github token you can follow this guide on how to create one, you just need to select the repo permission and it’s children’s setting https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line
+
 You can either specify a folder with -n:mynewrepo or if you just specify -n it will use the current folder.
 
 ```nrepo -n:mynewrepo```
