@@ -25,7 +25,7 @@ namespace NukedBit.NRepo.Services
             Console.Write("Yes/No:");
             while (true)
             {
-                var line = Console.ReadLine().ToLowerInvariant().Trim();
+                var line = Console.ReadLine()?.ToLowerInvariant()?.Trim();
                 if (line == "yes")
                 {
                     return true;
@@ -56,7 +56,7 @@ namespace NukedBit.NRepo.Services
                     return result;
                 }
 
-                if (line.Trim() == exitKey)
+                if (line?.Trim() == exitKey)
                 {
                     break;
                 }

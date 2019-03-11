@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 using NukedBit.NRepo.Services;
 using Octokit;
+using Optional;
 
 namespace NukedBit.NRepo
 {
-    public class RemoteGithubCommandHandlerAsync : ICommandHandlerAsync<RemoteGithubCommand, Repository>
+    public class RemoteGithubCommandHandlerAsync : ICommandHandlerAsync<RemoteGithubCommand, Option<Repository>>
     {
         private readonly IGitHubClient _client;
         private readonly IConsoleService _consoleService;
@@ -16,10 +17,8 @@ namespace NukedBit.NRepo
             _consoleService = consoleService;
         }
 
-        public async Task<Repository> HandleAsync(RemoteGithubCommand cmd)
+        public async Task<Option<Repository>> HandleAsync(RemoteGithubCommand cmd)
         {
-            Repository result = null;
-
             _consoleService.WriteLine();
             _consoleService.WriteLine("Time to pick a remote:");
             _consoleService.WriteLine("1: Create New.");
@@ -29,13 +28,13 @@ namespace NukedBit.NRepo
 
             if (choice is null || choice == 3)
             {
-                return null;
+                return Option.None<Repository>();
             }
             else if (choice == 1)
             {
                 try
                 {
-                    result = await _client.Repository.Create(new NewRepository(cmd.RepoName));
+                    return Option.Some(await _client.Repository.Create(new NewRepository(cmd.RepoName)));
                 }
                 catch (Octokit.RepositoryExistsException repositoryExistsException)
                 {
@@ -45,7 +44,7 @@ namespace NukedBit.NRepo
                     if (_consoleService.AskForConfirmation())
                     {
                         var user = await _client.User.Current();
-                        result = await _client.Repository.Get(user.Login, repositoryExistsException.RepositoryName);
+                        return Option.Some(await _client.Repository.Get(user.Login, repositoryExistsException.RepositoryName));
                     }
                     else
                     {
@@ -81,14 +80,13 @@ namespace NukedBit.NRepo
                 choice = _consoleService.ReadInputNumber(min: 1, max: repoList.Count);
                 if (choice is null)
                 {
-                    return null;
+                    return Option.None<Repository>();
                 }
 
-                result = repoList[choice.Value - 1];
-
+                return Option.Some(repoList[choice.Value - 1]);
             }
 
-            return result;
+            return Option.None<Repository>();
         }
     }
 }

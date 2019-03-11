@@ -7,6 +7,8 @@ using NSubstitute.ExceptionExtensions;
 using NukedBit.NRepo;
 using NukedBit.NRepo.Services;
 using Octokit;
+using Optional;
+using Optional.Unsafe;
 using Xunit;
 
 namespace NRepo.Tests
@@ -24,7 +26,7 @@ namespace NRepo.Tests
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
-            Assert.Null(repository);
+            Assert.Null(repository.ValueOrDefault());
         }
 
         [Fact(DisplayName = "Create New GitHub Repository")]
@@ -43,7 +45,7 @@ namespace NRepo.Tests
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
-            Assert.NotNull(repository);
+            Assert.NotNull(repository.ValueOrDefault());
         }
 
         [Fact(DisplayName = "Create Remote Repo Already Exists")]
@@ -96,7 +98,7 @@ namespace NRepo.Tests
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
-            Assert.Equal(0, repository.Id);
+            Assert.Equal(0, repository.ValueOrDefault().Id);
         }
 
         [Fact(DisplayName = "Choose it later")]
@@ -119,7 +121,7 @@ namespace NRepo.Tests
 
             var repository = await handler.HandleAsync(new RemoteGithubCommand("arepo"));
 
-            Assert.Null(repository);
+            Assert.Null(repository.ValueOrDefault());
         }
 
 

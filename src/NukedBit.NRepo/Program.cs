@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using NukedBit.NRepo.Services;
 using Octokit;
+using Optional;
 
 namespace NukedBit.NRepo
 {
@@ -29,7 +30,7 @@ namespace NukedBit.NRepo
                         .AddSingleton<IFileService, FileService>()
                         .AddSingleton<IConsoleService, ConsoleService>()
                         .AddSingleton<ITemplateFilesService, TemplateFilesService>()
-                        .AddSingleton<ICommandHandlerAsync<RemoteGithubCommand, Repository>, RemoteGithubCommandHandlerAsync>()
+                        .AddSingleton<ICommandHandlerAsync<RemoteGithubCommand, Option<Repository>>, RemoteGithubCommandHandlerAsync>()
                         .AddSingleton<IHttpService, HttpService>()
                         .AddSingleton<ICommandHandlerAsync<DownloadTemplateFilesCommand, IEnumerable<string>>, DownloadTemplateFilesCommandHandlerAsync>()
                         .AddSingleton<ICommandHandler, CommandHandler>()
@@ -38,7 +39,7 @@ namespace NukedBit.NRepo
                         {
                             var client = new GitHubClient(new ProductHeaderValue("github-tools"))
                             {
-                                Credentials = new Credentials(Environment.GetEnvironmentVariable("NREPO_GITHUB_TOKEN"))
+                                Credentials = new Credentials(Environment.GetEnvironmentVariable(Env.GithubTokenEnv))
                             };
                             return (IGitHubClient) client;
                         })

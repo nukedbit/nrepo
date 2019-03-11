@@ -32,7 +32,7 @@ namespace NukedBit.NRepo
         {
             var filesToAdd = await _templateFilesService.DownloadAsync();
 
-            if (await _licenseService.PickLicenseAsync() is var licenseFile)
+            if (await _licenseService.PickLicenseAsync() is string licenseFile)
             {
                 filesToAdd.Add(licenseFile);
             }
