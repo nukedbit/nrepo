@@ -13,7 +13,7 @@ using Xunit;
 
 namespace NRepo.Tests
 {
-    public class RemoteGithubCommandHandlerAsyncTess
+    public class RemoteGithubCommandHandlerAsyncTests
     {
         [Fact(DisplayName = "No remote was chosen")]
         public async Task ChoiceExit()
