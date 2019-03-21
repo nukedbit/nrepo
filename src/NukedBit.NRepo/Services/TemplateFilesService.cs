@@ -34,10 +34,10 @@ namespace NukedBit.NRepo.Services
                 var filePath = Path.Combine(_fileService.GetCurrentDirectory(), name);
                 if (_fileService.FileExists(filePath))
                 {
-                    _consoleService.WriteLine("File {0} already exists! skipping...", name);
+                    _consoleService.WriteLine($"File {name} already exists! skipping...");
                     continue;
                 }
-                _consoleService.WriteLine("Downloading {0} ...", name);
+                _consoleService.WriteLine($"Downloading {name} ...");
                 await client.DownloadFileTaskAsync(new Uri(url), filePath);
             }
             _consoleService.WriteLine();
