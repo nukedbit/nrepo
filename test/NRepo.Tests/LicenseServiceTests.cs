@@ -27,7 +27,7 @@ namespace NRepo.Tests
 
             var result = await service.PickLicenseAsync();
 
-            consoleService.Received(1).WriteLine("{0}: {1}", 1, "mit");
+            consoleService.Received(1).WriteLine("1: mit");
         }
 
         [Fact(DisplayName = "Choose the first license")]

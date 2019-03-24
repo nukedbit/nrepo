@@ -33,7 +33,7 @@ namespace NukedBit.NRepo
             if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable(Env.GithubTokenEnv)))
             {
                 _consoleService.WriteLineColored(ConsoleColor.Red, "Missing github token!");
-                _consoleService.WriteLineColored(ConsoleColor.Red, "Please set the token on the environment variable {0}", Env.GithubTokenEnv);
+                _consoleService.WriteLineColored(ConsoleColor.Red, $"Please set the token on the environment variable {Env.GithubTokenEnv}");
                 _consoleService.WriteLineColored(ConsoleColor.Red, "Follow github guide on how-to create one https://help.github.com/en/articles/creating-a-personal-access-token-for-the-command-line");
                 return;
             }

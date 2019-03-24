@@ -29,7 +29,7 @@ namespace NukedBit.NRepo.Services
             _consoleService.WriteLine();
             for (var i = 0; i < infos.Count; i++)
             {
-                _consoleService.WriteLine("{0}: {1}", i + 1, infos[i].Name);
+                _consoleService.WriteLine($"{i + 1}: {infos[i].Name}");
             }
 
             var inputNumber = _consoleService.ReadInputNumber(min: 1, max: infos.Count);

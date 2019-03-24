@@ -20,7 +20,7 @@ namespace NukedBit.NRepo
         {
             foreach (var file in filesToAdd)
             {
-                _consoleService.WriteLine("Adding file {0}", file);
+                _consoleService.WriteLine($"Adding file {file}");
                 repository.Index.Add(file);
                 repository.Index.Write();
             }
@@ -51,7 +51,7 @@ namespace NukedBit.NRepo
                 SetOriginRemote(repository, command.CloneUrl);
 
                 _consoleService.WriteLine();
-                _consoleService.WriteLine("Remote Url: {0}", command.CloneUrl ?? "None");
+                _consoleService.WriteLine($"Remote Url: {command.CloneUrl ?? "None"}");
             }
         }
     }

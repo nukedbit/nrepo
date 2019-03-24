@@ -52,7 +52,7 @@ namespace NukedBit.NRepo
                 catch (Octokit.RepositoryExistsException repositoryExistsException)
                 {
                     _consoleService.WriteLine("A repository with the same name already exist on GitHub.");
-                    _consoleService.WriteLine("Repository Name: {0}", repositoryExistsException.RepositoryName);
+                    _consoleService.WriteLine($"Repository Name: {repositoryExistsException.RepositoryName}");
                     _consoleService.WriteLine("Do you want to use this one?");
                     if (_consoleService.AskForConfirmation())
                     {
@@ -87,7 +87,7 @@ namespace NukedBit.NRepo
 
                 for (var i = 0; i < repoList.Count; i++)
                 {
-                    _consoleService.WriteLine("{0}: {1}", i + 1, repoList[i].Name);
+                    _consoleService.WriteLine($"{i + 1}: {repoList[i].Name}");
                 }
 
                 choice = _consoleService.ReadInputNumber(min: 1, max: repoList.Count);

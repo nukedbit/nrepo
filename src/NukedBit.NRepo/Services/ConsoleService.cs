@@ -5,17 +5,15 @@ namespace NukedBit.NRepo.Services
 {
     public class ConsoleService : IConsoleService
     {
-        public void WriteLine(string format,  params object[] args) => Console.WriteLine(format, args);
-
-        public void WriteLine(string str) => Console.WriteLine(str);
+        public void WriteLine(string inputString) => Console.WriteLine(inputString);
 
         public void WriteLine() => Console.WriteLine();
 
-        public void WriteLineColored(ConsoleColor color, string format,  params object[] args)
+        public void WriteLineColored(ConsoleColor color, string inputString)
         {
             var currentColor = Console.ForegroundColor;
             Console.ForegroundColor = color;
-            Console.WriteLine(format, args);
+            Console.WriteLine(inputString);
             Console.ForegroundColor = currentColor;
         }
 
@@ -43,7 +41,7 @@ namespace NukedBit.NRepo.Services
             }
         }
 
-        public Option<int> ReadInputNumber(int min, int max, string exitKey = "exit")
+        public Option<int> ReadInputNumber(int min, int max)
         {
             var defaultColor = Console.ForegroundColor;
             while (true)
@@ -57,7 +55,7 @@ namespace NukedBit.NRepo.Services
                     return Option.Some(result);
                 }
 
-                if (line?.Trim() == exitKey)
+                if (line?.Trim() == "exit")
                 {
                     break;
                 }
